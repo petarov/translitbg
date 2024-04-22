@@ -77,3 +77,17 @@ var (
 		"ИЯ": "IA",
 	}
 )
+
+type TranslitBG struct {
+	params []int
+}
+
+func New() *TranslitBG {
+	tr := &TranslitBG{}
+	return tr
+}
+
+func (tr *TranslitBG) Run(input string) string {
+	// TODO
+	return "abvgdezhziyklmnoprstufhtschshshtayyuyai"
+}
