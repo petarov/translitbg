@@ -1,9 +1,10 @@
 package translitbg
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"regexp"
-	"strings"
 )
 
 var (
@@ -94,9 +95,10 @@ func New() *TranslitBG {
 	return tr
 }
 
-func (tr *TranslitBG) Run(input string) string {
-	result := []string{}
-	length := len(input)
+func (tr *TranslitBG) Run(input string) (string, error) {
+	if len(input) == 0 {
+		return "", nil
+	}
 
 	pattern := "^\\w+$"
 	regex, err := regexp.Compile(pattern)
@@ -104,33 +106,49 @@ func (tr *TranslitBG) Run(input string) string {
 		panic(fmt.Errorf("error compiling regex: %v", err))
 	}
 
-	for i := 0; i < length; i++ {
-		cur := string(input[i])
+	source := bytes.NewBufferString(input)
+	dest := bytes.NewBuffer(nil)
 
-		if i+1 < length {
-			next := string(input[i+1])
-			curToken := cur + next
+	for {
+		ch, _, err := source.ReadRune()
 
-			found, ok := STREAMLINED_TOKENS[curToken]
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return "", fmt.Errorf("error reading source text: %v", err)
+		}
+
+		// TODO: is this cyr char
+
+		ch2, _, err := source.ReadRune()
+
+		if err != nil && err != io.EOF {
+			return "", fmt.Errorf("error reading source text: %v", err)
+		} else if err == nil {
+			token := string([]rune{ch, ch2})
+
+			found, ok := STREAMLINED_TOKENS[token]
 			if ok {
-				if i+2 < length {
-					nextNext := string(input[i+2])
-					if regex.MatchString(nextNext) {
-						result = append(result, found)
-						i += 1
-						continue
-					}
+				ch3, _, err := source.ReadRune()
+				if err != io.EOF || !regex.MatchString(string(ch3)) {
+					source.UnreadRune()
+					dest.WriteString(found)
+					continue
+				} else {
+					source.UnreadRune()
 				}
+			} else {
+				source.UnreadRune()
 			}
 		}
 
-		token, ok := STREAMLINED[cur]
+		token, ok := STREAMLINED[string(ch)]
 		if ok {
-			result = append(result, token)
+			dest.WriteString(token)
 		} else {
-			result = append(result, cur)
+			dest.WriteRune(ch)
 		}
 	}
 
-	return strings.Join(result, "")
+	return dest.String(), nil
 }
