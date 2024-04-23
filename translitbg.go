@@ -42,7 +42,10 @@ func (tr *TranslitBG) Run(input string) (string, error) {
 			return "", fmt.Errorf("error reading source text: %v", err)
 		}
 
-		// TODO: is this cyr char
+		if !tr.isBGChar(ch) {
+			dest.WriteRune(ch)
+			continue
+		}
 
 		ch2, _, err := source.ReadRune()
 
@@ -70,9 +73,14 @@ func (tr *TranslitBG) Run(input string) (string, error) {
 		if ok {
 			dest.WriteString(token)
 		} else {
+			// this should really have already been handled by isBGChar above
 			dest.WriteRune(ch)
 		}
 	}
 
 	return dest.String(), nil
+}
+
+func (tr *TranslitBG) isBGChar(r rune) bool {
+	return (r >= 1040 && r <= 1103) || r == 1117 || r == 1037
 }
