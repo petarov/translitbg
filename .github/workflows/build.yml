@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go: [ '1.18', '1.22' ]
+        go: [ '1.18.x', '1.22.x' ]
     steps:
       - name: Set up Go v${{ matrix.go }}
         uses: actions/setup-go@v5
@@ -27,12 +27,12 @@ jobs:
           go version
           go get -v -d ./...
 
-      - name: Cache modules
-        uses: actions/cache@v4
-        with:
-          path: $GOPATH/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go
+      # - name: Cache modules
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: $GOPATH/pkg/mod
+      #     key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+      #     restore-keys: ${{ runner.os }}-go
 
       - name: Vet code
         run: go vet
@@ -40,7 +40,7 @@ jobs:
         run: go build -v .
       - name: Test with Go
         run: go test -v > TestResults-${{ matrix.go-version }}.txt
-      - name: Upload Go test results
+      - name: Upload Go test results-${{ matrix.go-version }}
         uses: actions/upload-artifact@v4
         with:
           name: Test-results-${{ matrix.go-version }}
