@@ -10,7 +10,11 @@ Transliteration of Bulgarian to Latin characters for Go
 
 # Usage
 
-TODO
+```go
+    tr := translitbg.New()
+    tr.Run("абвгдежзийклмнопрстуфхцчшщъьюя)
+    // Output: abvgdezhziyklmnoprstufhtschshshtayyuya
+```
 
 # References
 

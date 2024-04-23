@@ -1,6 +1,8 @@
 package translitbg
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestAlphabet(t *testing.T) {
 	expected := "abvgdezhziyklmnoprstufhtschshshtayyuyai"
