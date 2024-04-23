@@ -1,5 +1,7 @@
 # translitbg
 
+[![CI Build](https://github.com/petarov/translitbg/actions/workflows/build.yml/badge.svg)](https://github.com/petarov/translitbg/actions/workflows/build.yml)
+
 Transliteration of Bulgarian to Latin characters for Go
 
 Транслитерация на българските букви с латински, наречена още латинска транслитерация или латинизация/романизация на българския език.
@@ -12,7 +14,7 @@ Transliteration of Bulgarian to Latin characters for Go
 
 ```go
     tr := translitbg.New()
-    tr.Run("абвгдежзийклмнопрстуфхцчшщъьюя)
+    tr.Encode("абвгдежзийклмнопрстуфхцчшщъьюя")
     // Output: abvgdezhziyklmnoprstufhtschshshtayyuya
 ```
 

@@ -6,7 +6,7 @@ import (
 
 func TestAlphabet(t *testing.T) {
 	expected := "abvgdezhziyklmnoprstufhtschshshtayyuyai"
-	got, _ := New().Run("абвгдежзийклмнопрстуфхцчшщъьюяѝ")
+	got, _ := New().Encode("абвгдежзийклмнопрстуфхцчшщъьюяѝ")
 
 	if got != expected {
 		t.Errorf("Expected '%s', got '%s'", expected, got)
@@ -26,7 +26,7 @@ func TestSentences(t *testing.T) {
 	tr := New()
 
 	for _, tc := range testCases {
-		output, _ := tr.Run(tc.input)
+		output, _ := tr.Encode(tc.input)
 
 		if output != tc.expected {
 			t.Errorf("For sentence '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
@@ -48,7 +48,7 @@ func TestPeopleNames(t *testing.T) {
 	tr := New()
 
 	for _, tc := range testCases {
-		output, _ := tr.Run(tc.input)
+		output, _ := tr.Encode(tc.input)
 
 		if output != tc.expected {
 			t.Errorf("For name '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
@@ -78,7 +78,7 @@ func TestOtherNames(t *testing.T) {
 	tr := New()
 
 	for _, tc := range testCases {
-		output, _ := tr.Run(tc.input)
+		output, _ := tr.Encode(tc.input)
 
 		if output != tc.expected {
 			t.Errorf("For other name '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
@@ -199,7 +199,7 @@ func Test100Names(t *testing.T) {
 	tr := New()
 
 	for _, tc := range testCases {
-		output, _ := tr.Run(tc.input)
+		output, _ := tr.Encode(tc.input)
 
 		if output != tc.expected {
 			t.Errorf("For other name '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
@@ -247,7 +247,7 @@ func TestCityNames(t *testing.T) {
 	tr := New()
 
 	for _, tc := range testCases {
-		output, _ := tr.Run(tc.input)
+		output, _ := tr.Encode(tc.input)
 
 		if output != tc.expected {
 			t.Errorf("For other name '%s', expected '%s', got '%s'", tc.input, tc.expected, output)

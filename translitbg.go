@@ -19,7 +19,7 @@ func New() *TranslitBG {
 	}
 }
 
-func (tr *TranslitBG) Run(input string) (string, error) {
+func (tr *TranslitBG) Encode(input string) (string, error) {
 	if len(input) == 0 {
 		return "", nil
 	}
