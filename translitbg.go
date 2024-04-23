@@ -1,8 +1,14 @@
 package translitbg
 
+import (
+	"fmt"
+	"regexp"
+	"strings"
+)
+
 var (
 	// Възстановяването на оригиналната дума не е водещ принцип!
-	cyr2Lat = map[string]string{
+	STREAMLINED = map[string]string{
 		// lower case
 		"а": "a",
 		"б": "b",
@@ -69,7 +75,7 @@ var (
 		"Я": "Ya",
 	}
 
-	tokens = map[string]string{
+	STREAMLINED_TOKENS = map[string]string{
 		// Буквеното съчетание „ия“, когато е в края на думата, се изписва и предава чрез „ia“
 		"ия": "ia",
 		"Ия": "Ia",
@@ -83,11 +89,48 @@ type TranslitBG struct {
 }
 
 func New() *TranslitBG {
+	// TODO: add type
 	tr := &TranslitBG{}
 	return tr
 }
 
 func (tr *TranslitBG) Run(input string) string {
-	// TODO
-	return "abvgdezhziyklmnoprstufhtschshshtayyuyai"
+	result := []string{}
+	length := len(input)
+
+	pattern := "^\\w+$"
+	regex, err := regexp.Compile(pattern)
+	if err != nil {
+		panic(fmt.Errorf("error compiling regex: %v", err))
+	}
+
+	for i := 0; i < length; i++ {
+		cur := string(input[i])
+
+		if i+1 < length {
+			next := string(input[i+1])
+			curToken := cur + next
+
+			found, ok := STREAMLINED_TOKENS[curToken]
+			if ok {
+				if i+2 < length {
+					nextNext := string(input[i+2])
+					if regex.MatchString(nextNext) {
+						result = append(result, found)
+						i += 1
+						continue
+					}
+				}
+			}
+		}
+
+		token, ok := STREAMLINED[cur]
+		if ok {
+			result = append(result, token)
+		} else {
+			result = append(result, cur)
+		}
+	}
+
+	return strings.Join(result, "")
 }
