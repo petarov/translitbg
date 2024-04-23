@@ -40,9 +40,9 @@ jobs:
       - name: Build
         run: go build -v .
       - name: Test with Go
-        run: go test -v > TestResults-${{ matrix.go-version }}.txt
-      - name: Upload Go test results-${{ matrix.go-version }}
+        run: go test -v > TestResults-${{ matrix.go }}.txt
+      - name: Upload Go test results-${{ matrix.go }}
         uses: actions/upload-artifact@v4
         with:
-          name: Test-results-${{ matrix.go-version }}
-          path: TestResults-${{ matrix.go-version }}.txt
+          name: Test-results-${{ matrix.go }}
+          path: TestResults-${{ matrix.go }}.txt
