@@ -1,6 +1,7 @@
 # translitbg
 
 [![CI Build](https://github.com/petarov/translitbg/actions/workflows/build.yml/badge.svg)](https://github.com/petarov/translitbg/actions/workflows/build.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/petarov/translitbg)](https://goreportcard.com/report/github.com/petarov/translitbg)
 
 Transliteration of Bulgarian to Latin characters for Go
 
