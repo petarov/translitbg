@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"regexp"
+	"strings"
 )
 
 type TranslitBG struct {
@@ -44,7 +45,7 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 			return "", fmt.Errorf("error reading source text: %v", err)
 		}
 
-		if !tr.isBGChar(ch) {
+		if !isBGChar(ch) {
 			dest.WriteRune(ch)
 			continue
 		}
@@ -73,8 +74,13 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 
 		token, ok := tr.chars[string(ch)]
 		if ok {
-			dest.WriteString(token)
+			if isComboChar(ch) && isUpperBGChar(ch) && (ch2 == 0 || isUpperBGChar(ch2)) {
+				dest.WriteString(strings.ToUpper(token))
+			} else {
+				dest.WriteString(token)
+			}
 		} else {
+			// TODO: test cases
 			// this should have already been handled by isBGChar above
 			dest.WriteRune(ch)
 		}
@@ -83,6 +89,29 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 	return dest.String(), nil
 }
 
-func (tr *TranslitBG) isBGChar(r rune) bool {
+// isBGChar returns true, if the rune r is a cyrillic rune
+// See https://symbl.cc/en/alphabets/bulgarian
+func isBGChar(r rune) bool {
 	return (r >= 1040 && r <= 1103) || r == 1117 || r == 1037
+}
+
+// isComboChar returns true, if the rune r is to be transformed into a
+// combination of latin characters
+func isComboChar(r rune) bool {
+	switch r {
+	case 1046, 1078, // Ж, ж
+		1062, 1094, // Ц, ц
+		1063, 1095, // Ч, ч
+		1064, 1096, // Ш, ш
+		1065, 1097, // Щ, щ
+		1070, 1102, // Ю, ю
+		1071, 1103: // Я, я
+		return true
+	}
+	return false
+}
+
+// isUpperBGChar returns true, if the rune r is an uppercase cyrillic rune
+func isUpperBGChar(r rune) bool {
+	return (r >= 1040 && r <= 1071) || r == 1037
 }

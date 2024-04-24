@@ -34,6 +34,113 @@ func TestSentences(t *testing.T) {
 	}
 }
 
+func TestEdgeCases(t *testing.T) {
+	testCases := []struct {
+		input    string
+		expected string
+	}{
+		{"България", "Bulgaria"},
+		{"ЖЕЗЪЛ", "ZHEZAL"},
+		{"жЕЗЪЛ", "zhEZAL"},
+		{"ЩАСТИЕ", "SHTASTIE"},
+		{"чОвек", "chOvek"},
+		{"ШИВАЧ", "SHIVACH"},
+		{"шИВАч", "shIVAch"},
+		{"ЮНГА", "YUNGA"},
+		{"юНГА", "yuNGA"},
+		{"ЯБЪЛКИ", "YABALKI"},
+		{"яБЪЛКИ", "yaBALKI"},
+	}
+
+	tr := New()
+
+	for _, tc := range testCases {
+		output, _ := tr.Encode(tc.input)
+
+		if output != tc.expected {
+			t.Errorf("For edge case '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
+		}
+	}
+}
+
+func TestLocations(t *testing.T) {
+	testCases := []struct {
+		input    string
+		expected string
+	}{
+		{"Стара планина", "Stara planina"},
+		{"Атанасовско езеро", "Atanasovsko ezero"},
+		{"Централен Балкан", "Tsentralen Balkan"},
+		{"София-юг", "Sofia-yug"},
+		{"СофИя-юг", "SofIa-yug"},
+		{"СофиЯ-юг", "SofiA-yug"},
+		{"СофИЯ-ЮГ", "SofIA-YUG"},
+		{"гр. София, ул. Тракия.", "gr. Sofia, ul. Trakia."},
+		{"гр. СофИЯ, ул. ТракИя.", "gr. SofIA, ul. TrakIa."},
+		{"Перник-север", "Pernik-sever"},
+		{"Златни пясъци", "Zlatni pyasatsi"},
+		{"Горна Оряховица", "Gorna Oryahovitsa"},
+	}
+
+	tr := New()
+
+	for _, tc := range testCases {
+		output, _ := tr.Encode(tc.input)
+
+		if output != tc.expected {
+			t.Errorf("For other name '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
+		}
+	}
+}
+
+func TestCityNames(t *testing.T) {
+	testCases := []struct {
+		input    string
+		expected string
+	}{
+		{"София", "Sofia"},
+		{"Пловдив", "Plovdiv"},
+		{"Варна", "Varna"},
+		{"Бургас", "Burgas"},
+		{"Русе", "Ruse"},
+		{"Стара Загора", "Stara Zagora"},
+		{"Плевен", "Pleven"},
+		{"Сливен", "Sliven"},
+		{"Добрич", "Dobrich"},
+		{"Шумен", "Shumen"},
+		{"Хасково", "Haskovo"},
+		{"Перник", "Pernik"},
+		{"Ямбол", "Yambol"},
+		{"Благоевград", "Blagoevgrad"},
+		{"Велико Търново", "Veliko Tarnovo"},
+		{"Враца", "Vratsa"},
+		{"Габрово", "Gabrovo"},
+		{"Видин", "Vidin"},
+		{"Монтана", "Montana"},
+		{"Ловеч", "Lovech"},
+		{"Разград", "Razgrad"},
+		{"Силистра", "Silistra"},
+		{"Търговище", "Targovishte"},
+		{"Кюстендил", "Kyustendil"},
+		{"Пазарджик", "Pazardzhik"},
+		{"Смолян", "Smolyan"},
+		{"Кърджали", "Kardzhali"},
+		{"Велинград", "Velingrad"},
+		{"Дупница", "Dupnitsa"},
+		{"Петрич", "Petrich"},
+	}
+
+	tr := New()
+
+	for _, tc := range testCases {
+		output, _ := tr.Encode(tc.input)
+
+		if output != tc.expected {
+			t.Errorf("For city name '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
+		}
+	}
+}
+
 func TestPeopleNames(t *testing.T) {
 	testCases := []struct {
 		input    string
@@ -56,37 +163,7 @@ func TestPeopleNames(t *testing.T) {
 	}
 }
 
-func TestOtherNames(t *testing.T) {
-	testCases := []struct {
-		input    string
-		expected string
-	}{
-		{"Стара планина", "Stara planina"},
-		{"Атанасовско езеро", "Atanasovsko ezero"},
-		{"Централен Балкан", "Tsentralen Balkan"},
-		{"София-юг", "Sofia-yug"},
-		{"СофИя-юг", "SofIa-yug"},
-		{"СофиЯ-юг", "SofiA-yug"},
-		{"СофИЯ-ЮГ", "SofIA-YuG"},
-		{"гр. София, ул. Тракия.", "gr. Sofia, ul. Trakia."},
-		{"гр. СофИЯ, ул. ТракИя.", "gr. SofIA, ul. TrakIa."},
-		{"Перник-север", "Pernik-sever"},
-		{"Златни пясъци", "Zlatni pyasatsi"},
-		{"Горна Оряховица", "Gorna Oryahovitsa"},
-	}
-
-	tr := New()
-
-	for _, tc := range testCases {
-		output, _ := tr.Encode(tc.input)
-
-		if output != tc.expected {
-			t.Errorf("For other name '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
-		}
-	}
-}
-
-func Test100Names(t *testing.T) {
+func Test100Words(t *testing.T) {
 	testCases := []struct {
 		input    string
 		expected string
@@ -202,55 +279,7 @@ func Test100Names(t *testing.T) {
 		output, _ := tr.Encode(tc.input)
 
 		if output != tc.expected {
-			t.Errorf("For other name '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
-		}
-	}
-}
-
-func TestCityNames(t *testing.T) {
-	testCases := []struct {
-		input    string
-		expected string
-	}{
-		{"София", "Sofia"},
-		{"Пловдив", "Plovdiv"},
-		{"Варна", "Varna"},
-		{"Бургас", "Burgas"},
-		{"Русе", "Ruse"},
-		{"Стара Загора", "Stara Zagora"},
-		{"Плевен", "Pleven"},
-		{"Сливен", "Sliven"},
-		{"Добрич", "Dobrich"},
-		{"Шумен", "Shumen"},
-		{"Хасково", "Haskovo"},
-		{"Перник", "Pernik"},
-		{"Ямбол", "Yambol"},
-		{"Благоевград", "Blagoevgrad"},
-		{"Велико Търново", "Veliko Tarnovo"},
-		{"Враца", "Vratsa"},
-		{"Габрово", "Gabrovo"},
-		{"Видин", "Vidin"},
-		{"Монтана", "Montana"},
-		{"Ловеч", "Lovech"},
-		{"Разград", "Razgrad"},
-		{"Силистра", "Silistra"},
-		{"Търговище", "Targovishte"},
-		{"Кюстендил", "Kyustendil"},
-		{"Пазарджик", "Pazardzhik"},
-		{"Смолян", "Smolyan"},
-		{"Кърджали", "Kardzhali"},
-		{"Велинград", "Velingrad"},
-		{"Дупница", "Dupnitsa"},
-		{"Петрич", "Petrich"},
-	}
-
-	tr := New()
-
-	for _, tc := range testCases {
-		output, _ := tr.Encode(tc.input)
-
-		if output != tc.expected {
-			t.Errorf("For other name '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
+			t.Errorf("For word '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
 		}
 	}
 }
