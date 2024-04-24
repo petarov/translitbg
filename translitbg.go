@@ -79,10 +79,6 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 			} else {
 				dest.WriteString(token)
 			}
-		} else {
-			// TODO: test cases
-			// this should have already been handled by isBGChar above
-			dest.WriteRune(ch)
 		}
 	}
 

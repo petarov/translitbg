@@ -21,6 +21,8 @@ func TestSentences(t *testing.T) {
 		{"Всички хора се раждат свободни и равни по достойнство и права. Те са надарени с разум и съвест и следва да се отнасят помежду си в дух на братство.", "Vsichki hora se razhdat svobodni i ravni po dostoynstvo i prava. Te sa nadareni s razum i savest i sledva da se otnasyat pomezhdu si v duh na bratstvo."},
 		{"Всички хора \nсе раждат свободни\n и равни по достойнство\n и права.", "Vsichki hora \nse razhdat svobodni\n i ravni po dostoynstvo\n i prava."},
 		{"Ѝ може да бъде намерен и в други езици \nкато руския език и украинския език.", "I mozhe da bade nameren i v drugi ezitsi \nkato ruskia ezik i ukrainskia ezik."},
+		{"Seдем с едin udар", "Sedem s edin udar"},
+		{"Внезapna-smqна-на-$олаri-i-еüро", "Vnezapna-smqna-na-$olari-i-eüro"},
 	}
 
 	tr := New()
@@ -42,7 +44,10 @@ func TestEdgeCases(t *testing.T) {
 		{"България", "Bulgaria"},
 		{"ЖЕЗЪЛ", "ZHEZAL"},
 		{"жЕЗЪЛ", "zhEZAL"},
+		{"жезъл", "zhezal"},
 		{"ЩАСТИЕ", "SHTASTIE"},
+		{"щАСТИЕ", "shtASTIE"},
+		{"ЩаСТИЕ", "SHTaSTIE"},
 		{"чОвек", "chOvek"},
 		{"ШИВАЧ", "SHIVACH"},
 		{"шИВАч", "shIVAch"},
