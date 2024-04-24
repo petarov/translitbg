@@ -10,24 +10,26 @@ import (
 type TranslitBG struct {
 	chars  map[string]string
 	tokens map[string]string
+	regex  *regexp.Regexp
 }
 
 func New() *TranslitBG {
+	pattern := "^\\w+$"
+	regex, err := regexp.Compile(pattern)
+	if err != nil {
+		panic(fmt.Errorf("error compiling regex: %v", err))
+	}
+
 	return &TranslitBG{
 		STREAMLINED,
 		STREAMLINED_TOKENS,
+		regex,
 	}
 }
 
 func (tr *TranslitBG) Encode(input string) (string, error) {
 	if len(input) == 0 {
 		return "", nil
-	}
-
-	pattern := "^\\w+$"
-	regex, err := regexp.Compile(pattern)
-	if err != nil {
-		panic(fmt.Errorf("error compiling regex: %v", err))
 	}
 
 	source := bytes.NewBufferString(input)
@@ -57,7 +59,7 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 			found, ok := tr.tokens[token]
 			if ok {
 				ch3, _, err := source.ReadRune()
-				if err != io.EOF || !regex.MatchString(string(ch3)) {
+				if err != io.EOF || !tr.regex.MatchString(string(ch3)) {
 					source.UnreadRune()
 					dest.WriteString(found)
 					continue
@@ -73,7 +75,7 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 		if ok {
 			dest.WriteString(token)
 		} else {
-			// this should really have already been handled by isBGChar above
+			// this should have already been handled by isBGChar above
 			dest.WriteRune(ch)
 		}
 	}
