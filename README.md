@@ -24,6 +24,8 @@ tr.Encode("Стара планина")
 // Output: Stara planina
 tr.Encode("Горна Оряховица")
 // Output: Gorna Oryahovitsa
+tr.Encode("БЪЛГАРИЯ")
+// Output: BULGARIA
 ```
 
 # References
