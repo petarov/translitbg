@@ -42,6 +42,10 @@ func TestEdgeCases(t *testing.T) {
 		input    string
 		expected string
 	}{
+		{"България", "Bulgaria"},
+		{"българия", "bulgaria"},
+		{"БЪЛГАРИЯ", "BULGARIA"},
+		{"БъЛгАриЯ", "BuLgAriA"},
 		{"ЖЕЗЪЛ", "ZHEZAL"},
 		{"жЕЗЪЛ", "zhEZAL"},
 		{"жезъл", "zhezal"},
