@@ -29,7 +29,8 @@ func New() *TranslitBG {
 }
 
 func (tr *TranslitBG) Encode(input string) (string, error) {
-	if len(input) == 0 {
+	length := len(input)
+	if length == 0 {
 		return "", nil
 	}
 
