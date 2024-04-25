@@ -17,13 +17,13 @@ See also [translitbg.js](https://github.com/petarov/translitbg.js)
 # Usage
 
 ```go
-    tr := translitbg.New()
-    tr.Encode("абвгдежзийклмнопрстуфхцчшщъьюя")
-    // Output: abvgdezhziyklmnoprstufhtschshshtayyuya
-	tr.Encode("Стара планина")
-	// Output: Stara planina
-	tr.Encode("Горна Оряховица")
-	// Output: Gorna Oryahovitsa
+tr := translitbg.New()
+tr.Encode("абвгдежзийклмнопрстуфхцчшщъьюя")
+// Output: abvgdezhziyklmnoprstufhtschshshtayyuya
+tr.Encode("Стара планина")
+// Output: Stara planina
+tr.Encode("Горна Оряховица")
+// Output: Gorna Oryahovitsa
 ```
 
 # References
