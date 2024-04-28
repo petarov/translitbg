@@ -1,7 +1,7 @@
 package translitbg
 
 var (
-	// Възстановяването на оригиналната дума не е водещ принцип!
+	// Възстановяването на оригиналната дума не е водещ принцип
 	STREAMLINED = map[string]string{
 		// lower case
 		"а": "a",
@@ -75,6 +75,17 @@ var (
 		"Ия": "Ia",
 		"иЯ": "iA",
 		"ИЯ": "IA",
+	}
+
+	// uppercase cyrillic character to its uppercase latin combo equivalent
+	STREAMLINED_CYR2COMBO_UC = map[rune]string{
+		1046: "ZH",  // Ж
+		1062: "TS",  // Ц
+		1063: "CH",  // Ч
+		1064: "SH",  // Ш
+		1065: "SHT", // Щ
+		1070: "YU",  // Ю
+		1071: "YA",  // Я
 	}
 
 	// БЪЛГАРИЯ

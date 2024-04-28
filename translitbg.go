@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"io"
 	"regexp"
-	"strings"
 )
 
 type TranslitBG struct {
 	chars  map[string]string
 	tokens map[string]string
+	combos map[rune]string
 	regex  *regexp.Regexp
 }
 
@@ -20,28 +20,12 @@ func isBGChar(r rune) bool {
 	return (r >= 1040 && r <= 1103) || r == 1117 || r == 1037
 }
 
-// isComboChar returns true, if the rune r is to be transformed into a
-// combination of latin characters
-func isComboChar(r rune) bool {
-	switch r {
-	case 1046, 1078, // Ж, ж
-		1062, 1094, // Ц, ц
-		1063, 1095, // Ч, ч
-		1064, 1096, // Ш, ш
-		1065, 1097, // Щ, щ
-		1070, 1102, // Ю, ю
-		1071, 1103: // Я, я
-		return true
-	}
-	return false
-}
-
 // isUpperBGChar returns true, if the rune r is an uppercase cyrillic rune
 func isUpperBGChar(r rune) bool {
 	return (r >= 1040 && r <= 1071) || r == 1037
 }
 
-// tryDoBulgaria returns true for the case where input s is the text "България"
+// tryDoBulgaria returns true for the case where input s is the text "България".
 // In this case the "ъ" needs to be trasformed into an "u" as the law dictates
 func tryDoBulgaria(input string) (bool, string) {
 	runes := []rune(input)
@@ -70,6 +54,7 @@ func New() *TranslitBG {
 	return &TranslitBG{
 		STREAMLINED,
 		STREAMLINED_TOKENS,
+		STREAMLINED_CYR2COMBO_UC,
 		regex,
 	}
 }
@@ -128,8 +113,9 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 
 		token, ok := tr.chars[string(ch)]
 		if ok {
-			if isComboChar(ch) && isUpperBGChar(ch) && (ch2 == 0 || isUpperBGChar(ch2)) {
-				dest.WriteString(strings.ToUpper(token))
+			ucc, ok := tr.combos[ch]
+			if ok && (ch2 == 0 || isUpperBGChar(ch2)) {
+				dest.WriteString(ucc)
 			} else {
 				dest.WriteString(token)
 			}
