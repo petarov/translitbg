@@ -1,19 +1,14 @@
 ### What is this about?
 
-Description or closes #<issue>
+Description or issue #`<id>`
 
-### Breaking change No
+### Breaking change?
 
-Yes/No?
+Yes/No
 
-### How can it be verified?
+### Requirements
 
-Test case or unit tests?
-
-### ToDo
-
-- [ ] Unit tests
-- [ ] Edit README, if needed
-- [ ] Format source code by running `make fmt`
-- [ ] Pass the test by `go test -v`
-- [ ] Enable "Allow edits from maintainers" for this PR
+- Format source code by running `make fmt`
+- Pass the tests by `go test -v`
+- When possible please add **1 or more unit tests** that address the issue your PR fixes
+- Please enable [Allow edits from maintainers](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork) for this PR
