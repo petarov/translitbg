@@ -74,6 +74,7 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 
 	source := bytes.NewBufferString(input)
 	dest := bytes.NewBuffer(nil)
+	ch_1 := ""
 
 	for {
 		ch, _, err := source.ReadRune()
@@ -84,42 +85,44 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 			return "", fmt.Errorf("error reading source text: %v", err)
 		}
 
-		if !isBGChar(ch) {
-			dest.WriteRune(ch)
-			continue
-		}
+		if isBGChar(ch) {
+			ch2, _, err := source.ReadRune()
 
-		ch2, _, err := source.ReadRune()
+			if err != nil && err != io.EOF {
+				return "", fmt.Errorf("error reading source text: %v", err)
+			} else if err == nil {
+				token := string([]rune{ch, ch2})
 
-		if err != nil && err != io.EOF {
-			return "", fmt.Errorf("error reading source text: %v", err)
-		} else if err == nil {
-			token := string([]rune{ch, ch2})
-
-			found, ok := tr.tokens[token]
-			if ok {
-				ch3, _, err := source.ReadRune()
-				if err != io.EOF || !tr.regex.MatchString(string(ch3)) {
-					source.UnreadRune()
-					dest.WriteString(found)
-					continue
+				found, ok := tr.tokens[token]
+				if ok {
+					ch3, _, err := source.ReadRune()
+					if err != io.EOF || !tr.regex.MatchString(string(ch3)) {
+						source.UnreadRune()
+						dest.WriteString(found)
+						ch_1 = string(ch3)
+						continue
+					} else {
+						source.UnreadRune()
+					}
 				} else {
 					source.UnreadRune()
 				}
-			} else {
-				source.UnreadRune()
 			}
+
+			token, ok := tr.chars[string(ch)]
+			if ok {
+				ucc, ok := tr.combos[ch]
+				if ok && (ch2 == 0 || isUpperBGChar(ch2) || !isBGChar(ch2) || len(tr.chars[ch_1]) > 0) {
+					dest.WriteString(ucc)
+				} else {
+					dest.WriteString(token)
+				}
+			}
+		} else {
+			dest.WriteRune(ch)
 		}
 
-		token, ok := tr.chars[string(ch)]
-		if ok {
-			ucc, ok := tr.combos[ch]
-			if ok && (ch2 == 0 || isUpperBGChar(ch2)) {
-				dest.WriteString(ucc)
-			} else {
-				dest.WriteString(token)
-			}
-		}
+		ch_1 = string(ch)
 	}
 
 	return dest.String(), nil
