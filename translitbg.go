@@ -25,25 +25,6 @@ func isUpperBGChar(r rune) bool {
 	return (r >= 1040 && r <= 1071) || r == 1037
 }
 
-// tryDoBulgaria returns true for the case where input s is the text "България".
-// In this case the "ъ" needs to be trasformed into an "u" as the law dictates
-func tryDoBulgaria(input string) (bool, string) {
-	runes := []rune(input)
-	dest := make([]rune, 8)
-
-	for i, r := range runes {
-		if BULGARIA_CYR_LOW[i] == r {
-			dest[i] = BULGARIA_LAT_LOW[i]
-		} else if BULGARIA_CYR_UP[i] == r {
-			dest[i] = BULGARIA_LAT_UP[i]
-		} else {
-			return false, ""
-		}
-	}
-
-	return true, string(dest)
-}
-
 func New() *TranslitBG {
 	pattern := "^\\w+$"
 	regex, err := regexp.Compile(pattern)
@@ -62,16 +43,6 @@ func New() *TranslitBG {
 // Encode transliterates Bulgarian string input to its latin equivalent.
 // Non-cyrillic characters will be left as they are.
 func (tr *TranslitBG) Encode(input string) (string, error) {
-	length := len(input)
-	if length == 0 {
-		return "", nil
-	} else if length == 16 {
-		ok, result := tryDoBulgaria(input)
-		if ok {
-			return result, nil
-		}
-	}
-
 	source := bytes.NewBufferString(input)
 	dest := bytes.NewBuffer(nil)
 	ch_1 := ""

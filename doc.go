@@ -22,11 +22,4 @@
 //
 //	tr.Encode("Горна Оряховица")
 //	// Output: Gorna Oryahovitsa
-//
-// There is an edge case where according to Bulgarian law the name "БЪЛГАРИЯ"
-// is an exception to the transliteration rule and must have its "Ъ"
-// transformed into a "U" instead of an "A". For example:
-//
-//	tr.Encode("БЪЛГАРИЯ")
-//	// Output: BULGARIA
 package translitbg
