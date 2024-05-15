@@ -27,21 +27,42 @@ func isUpperBGChar(r rune) bool {
 
 // tryDoBulgaria returns true for the case where input s is the text "България".
 // In this case the "ъ" needs to be trasformed into an "u" as the law dictates
-func tryDoBulgaria(input string) (bool, string) {
-	runes := []rune(input)
+func tryDoBulgaria(ch rune, source *bytes.Buffer) (string, error) {
+	reads := 0
 	dest := make([]rune, 8)
 
-	for i, r := range runes {
-		if BULGARIA_CYR_LOW[i] == r {
+	for i := 0; i < 8; i++ {
+		if BULGARIA_CYR_LOW[i] == ch {
 			dest[i] = BULGARIA_LAT_LOW[i]
-		} else if BULGARIA_CYR_UP[i] == r {
+		} else if BULGARIA_CYR_UP[i] == ch {
 			dest[i] = BULGARIA_LAT_UP[i]
 		} else {
-			return false, ""
+			break
 		}
+
+		ch2, _, err := source.ReadRune()
+		reads++
+
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return "", fmt.Errorf("error reading source text: %v", err)
+		}
+
+		ch = ch2
 	}
 
-	return true, string(dest)
+	if reads == 8 {
+		return string(dest), nil
+	}
+
+	fmt.Println("unreading reads", reads)
+
+	for c := 0; c < reads; c++ {
+		source.UnreadRune()
+	}
+
+	return "", nil
 }
 
 func New() *TranslitBG {
@@ -65,11 +86,6 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 	length := len(input)
 	if length == 0 {
 		return "", nil
-	} else if length == 16 {
-		ok, result := tryDoBulgaria(input)
-		if ok {
-			return result, nil
-		}
 	}
 
 	source := bytes.NewBufferString(input)
@@ -83,6 +99,17 @@ func (tr *TranslitBG) Encode(input string) (string, error) {
 			break
 		} else if err != nil {
 			return "", fmt.Errorf("error reading source text: %v", err)
+		}
+
+		if BULGARIA_CYR_LOW[0] == ch || BULGARIA_CYR_UP[0] == ch {
+			str, err := tryDoBulgaria(ch, source)
+			if err != nil {
+				return "", fmt.Errorf("error parsing bg text: %v", err)
+			} else if len(str) > 0 {
+				dest.WriteString(str)
+				ch_1 = str[len(str)-1:]
+				continue
+			}
 		}
 
 		if isBGChar(ch) {

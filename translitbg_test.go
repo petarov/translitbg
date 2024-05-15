@@ -13,31 +13,6 @@ func TestAlphabet(t *testing.T) {
 	}
 }
 
-func TestSentences(t *testing.T) {
-	testCases := []struct {
-		input    string
-		expected string
-	}{
-		{"Всички хора се раждат свободни и равни по достойнство и права. Те са надарени с разум и съвест и следва да се отнасят помежду си в дух на братство.", "Vsichki hora se razhdat svobodni i ravni po dostoynstvo i prava. Te sa nadareni s razum i savest i sledva da se otnasyat pomezhdu si v duh na bratstvo."},
-		{"Всички хора \nсе раждат свободни\n и равни по достойнство\n и права.", "Vsichki hora \nse razhdat svobodni\n i ravni po dostoynstvo\n i prava."},
-		{"Ѝ може да бъде намерен и в други езици \nкато руския език и украинския език.", "I mozhe da bade nameren i v drugi ezitsi \nkato ruskia ezik i ukrainskia ezik."},
-		{"СанЯ е на път за ЦаревеЦ-крепост и има МАНТИЯ от Желязо и Злато, носи ЖЕзъл и корона.", "SanYA e na pat za TsareveTS-krepost i ima MANTIA ot Zhelyazo i Zlato, nosi ZHEzal i korona."},
-		// mixed
-		{"Seдем с едin udар", "Sedem s edin udar"},
-		{"Внезapna-smqна-на-$олаri-i-еüро", "Vnezapna-smqna-na-$olari-i-eüro"},
-	}
-
-	tr := New()
-
-	for _, tc := range testCases {
-		output, _ := tr.Encode(tc.input)
-
-		if output != tc.expected {
-			t.Errorf("For sentence '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
-		}
-	}
-}
-
 func TestEdgeCases(t *testing.T) {
 	testCases := []struct {
 		input    string
@@ -353,6 +328,36 @@ func Test100Words(t *testing.T) {
 
 		if output != tc.expected {
 			t.Errorf("For word '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
+		}
+	}
+}
+
+func TestSentences(t *testing.T) {
+	testCases := []struct {
+		input    string
+		expected string
+	}{
+		{"Всички хора се раждат свободни и равни по достойнство и права. Те са надарени с разум и съвест и следва да се отнасят помежду си в дух на братство.", "Vsichki hora se razhdat svobodni i ravni po dostoynstvo i prava. Te sa nadareni s razum i savest i sledva da se otnasyat pomezhdu si v duh na bratstvo."},
+		{"Всички хора \nсе раждат свободни\n и равни по достойнство\n и права.", "Vsichki hora \nse razhdat svobodni\n i ravni po dostoynstvo\n i prava."},
+		{"Ѝ може да бъде намерен и в други езици \nкато руския език и украинския език.", "I mozhe da bade nameren i v drugi ezitsi \nkato ruskia ezik i ukrainskia ezik."},
+		{"СанЯ е на път за ЦаревеЦ-крепост и има МАНТИЯ от Желязо и Злато, носи ЖЕзъл и корона.", "SanYA e na pat za TsareveTS-krepost i ima MANTIA ot Zhelyazo i Zlato, nosi ZHEzal i korona."},
+		// mixed
+		{"Seдем с едin udар", "Sedem s edin udar"},
+		{"Внезapna-smqна-на-$олаri-i-еüро", "Vnezapna-smqna-na-$olari-i-eüro"},
+		// bulgaria
+		{"Всички в България", "Vsichki v Bulgaria"},
+		{"Всички в българия са българи", "Vsichki v bulgaria sa balgari"},
+		{"Всички в БЪЛГАРИЯ са БЪЛГАРИ", "Vsichki v BULGARIA sa BALGARI"},
+		{"Всички в БъЛгАриЯ са БълГаРИ", "Vsichki v BuLgAriA sa BalGaRI"},
+	}
+
+	tr := New()
+
+	for _, tc := range testCases {
+		output, _ := tr.Encode(tc.input)
+
+		if output != tc.expected {
+			t.Errorf("For sentence '%s', expected '%s', got '%s'", tc.input, tc.expected, output)
 		}
 	}
 }
